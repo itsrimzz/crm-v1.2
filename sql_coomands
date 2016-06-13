@@ -1,0 +1,196 @@
+CREATE TABLE users(name VARCHAR(255) NULL,username VARCHAR(255), password VARCHAR(255), PRIMARY KEY(username));
+
+	DELIMITER $$
+	CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_createUser`(
+	    IN p_name VARCHAR(255),
+	    IN p_username VARCHAR(255),
+	    IN p_password VARCHAR(255)
+	)
+	BEGIN
+	    if ( select exists (select 1 from users where username = p_username) ) THEN
+	     
+	        select 'Username Exists !!';
+	     
+	    ELSE
+	     
+	        insert into users
+	        (
+	            name,
+	            username,
+	            password
+	        )
+	        values
+	        (
+	            p_name,
+	            p_username,
+	            p_password
+	        );
+	     
+	    END IF;
+	END$$
+	DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_validateLogin`(
+IN p_username VARCHAR(255)
+)
+BEGIN
+    select * from users where username = p_username;
+END$$
+DELIMITER ;
+
+create table accounts(
+  id       int(16) auto_increment, 
+  fname     varchar(255),
+  lname     varchar(255) NULL,
+  phone     varchar(255),
+  aphone    varchar(255) NULL,
+  cc        varchar(255),
+  acc       varchar(255) NULL,
+  email      varchar(255),
+  subscription    varchar(255) NULL,
+  address   varchar(255),
+  source    varchar(255) NULL,
+  timezone   varchar(255) NULL,
+  notes      varchar(4000) NULL,
+  suspended   boolean default 0,
+  reason    varchar(4000) NULL,
+  PRIMARY KEY (id)
+);
+
+alter table accounts add creditcard varchar(4000);
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_searchID`(
+IN p_id VARCHAR(255)
+)
+BEGIN
+    select * from accounts where id = p_id;
+END$$
+DELIMITER ;
+
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_searchPhone`(
+IN p_phone VARCHAR(255)
+)
+BEGIN
+    select * from accounts where phone = p_phone;
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_searchEmail`(
+IN p_email VARCHAR(255)
+)
+BEGIN
+    select * from accounts where email = p_email;
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addAccount`(
+    IN fname VARCHAR(255),
+    IN lname VARCHAR(255),
+    IN phone VARCHAR(255),
+    IN cc VARCHAR(255),
+    IN aphone VARCHAR(255),
+    IN acc VARCHAR(255),
+    IN email VARCHAR(255),
+    IN subscription VARCHAR(255),
+    IN address VARCHAR(255),
+    IN source VARCHAR(255),
+    IN timezone VARCHAR(255),
+    IN notes VARCHAR(4000),
+    IN suspended tinyint(1),
+    IN reason VARCHAR(4000),
+    IN user VARCHAR(255),
+    IN creditcard varchar(4000)
+)
+BEGIN
+        
+        insert into accounts (fname,lname,phone,aphone,cc,acc,email,subscription,address,source,timezone,notes,suspended,reason,user,creditcard)values
+        (fname,lname,phone,aphone,cc,acc,email,subscription,address,source,timezone,notes,suspended,reason,user,creditcard);
+     
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_editAccount`(
+	IN p_id int(16),
+    IN fname VARCHAR(255),
+    IN lname VARCHAR(255),
+    IN phone VARCHAR(255),
+    IN cc VARCHAR(255),
+    IN aphone VARCHAR(255),
+    IN acc VARCHAR(255),
+    IN email VARCHAR(255),
+    IN subscription VARCHAR(255),
+    IN address VARCHAR(255),
+    IN source VARCHAR(255),
+    IN timezone VARCHAR(255),
+    IN notes VARCHAR(4000),
+    IN suspended tinyint(1),
+    IN reason VARCHAR(4000),
+    IN user VARCHAR(255),
+    IN creditcard varchar(4000)
+)
+BEGIN
+        
+        update accounts set fname=fname,lname=lname,phone=phone,aphone=aphone,cc=cc,acc=acc,email=email,subscription=subscription,address=address,source=source,timezone=timezone,notes=notes,suspended=suspended,reason=reason,user=user,creditcard=creditcard where id=p_id;
+     
+END$$
+DELIMITER ;
+
+create table notes(id int(16),notes varchar(4000),createdby varchar(255),status varchar(255),createdon timestamp default CURRENT_TIMESTAMP);
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getNotes`(
+IN p_id VARCHAR(255)
+)
+BEGIN
+    select * from notes where id = p_id;
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_addNotes`(
+IN p_id VARCHAR(255),
+IN p_notes varchar(4000),
+IN p_createdby varchar(255),
+IN p_status varchar(255)
+)
+BEGIN
+    insert into notes (id,notes,createdby,status) values (p_id,p_notes,p_createdby,p_status);
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getReport`()
+BEGIN
+    select * from accounts into outfile '/tmp/table.csv' fields terminated by ','optionally enclosed by '"' lines terminated by '\n';
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getCaseReport`()
+BEGIN
+    select * from notes into outfile '/tmp/case.csv' fields terminated by ','optionally enclosed by '"' lines terminated by '\n';
+END$$
+DELIMITER ;
+
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_getReport`()
+BEGIN
+    select * from accounts;
+END$$
+DELIMITER ;

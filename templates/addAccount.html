@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CRM</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/signup.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="">>
+    <script type="text/javascript" src="../static/js/jquery.js"></script>
+    <style type="text/css">
+    table{
+      width: 100%;
+      padding: 0;
+      align-self: center;
+      margin: 0 auto;
+    }
+    td{
+      padding: 20px;
+      text-align: left;
+    }
+    </style>
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="active"><a href="/userHome">Home</a>
+                    </li>
+                    <li role="presentation"><a href="/logout">Logout</a>
+                    </li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">CRM</h3>
+      </div>
+ 
+      <div class="jumbotron">
+        <h1>Customer Information</h1>
+        
+        <table class="table">
+        <form class="form-signin" action="/addAccount" method="post">
+        <tr>
+        <td>First name:*</td><td><input type="text" name="fname" size="30" required></input></td></tr>
+        <tr>
+        <td>Last name:*</td><td><input type="text" name="lname" size="30" required></input></td></tr>
+        <tr>
+        <td>Country Code:* &nbsp;</td><td><input type="text" name="cc" size="5" required></input><br></td></tr>
+        <tr>
+        <td>Phone Number:* &nbsp;</td><td><input type="text" name="phone" size="30" required></input></td></tr>
+        <tr>
+        <td>Alternate Country Code: &nbsp;</td><td><input type="text" name="acc" size="5"></input></td></tr>
+        <tr>
+        <td>Alternate Phone Number: &nbsp;</td><td><input type="text" name="aphone" size="30"></input></td></tr>
+        <tr>
+        <td>Email Address:* &nbsp;</td><td><input type="text" name="email" size="30" required></input></td></tr>
+        <tr>
+        <td>Subscription:* &nbsp;</td><td><textarea size="30" name="subscription" required></textarea></td></tr>
+        <tr>
+        <td>Address:* &nbsp;</td><td><textarea name="address"  required></textarea><br></td></tr>
+        <tr>
+        <td>Source: &nbsp;</td><td><textarea name="source"></textarea></td></tr>
+        <tr>
+        <td>Timezone: &nbsp;</td><td><input type="text" name="timezone" size="5"></input><br></td></tr>
+        <tr>
+        <td>Notes: &nbsp;</td><td><textarea name="notes"></textarea></td></tr>
+        <tr>
+        <td>Suspended:* &nbsp;</td><td><select name="suspended" class="form-control" required><option value="0">No</option><option value="1">Yes</option></select></td></tr>
+        <tr>
+        <td>Reason: &nbsp;</td><td><textarea name="reason"></textarea></td></tr>
+        <tr>
+        <td>Credit Card:* &nbsp;</td><td><textarea name="creditcard"  required></textarea></td></tr>
+        <tr>
+        <td></td><td><input type="submit" class="btn btn-default"></input></td></tr>
+      </form>
+        </table>
+      
+      </div>
+ 
+       
+ 
+      <footer class="footer">
+        <p>&copy; Company 2015</p>
+      </footer>
+ 
+    </div>
+  </body>
+<script type="text/javascript">
+  $(function() {
+    $('#btnSignUp').click(function() {
+ 
+        $.ajax({
+            url: '/signUp',
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                alert(response);
+                window.location = "/userHome"
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    });
+});
+
+</script>
+
+
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CRM</title>
+ 
+    
+    <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link href="../static/signup.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="">>
+    <script type="text/javascript" src="../static/js/jquery.js"></script>
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+    <style type="text/css">
+    table{
+      width: 100%;
+      padding: 0;
+      align-self: center;
+      margin: 0 auto;
+    }
+    td{
+      padding: 20px;
+      text-align: left;
+    }
+    </style>
+    <script type="text/javascript">
+      function addnote(){
+  var link = "/showAddNote?acc_id="+$.urlParam('acc_id');
+  window.location=link;
+}
+
+function edit(){
+  var link = "/showEditAccount?acc_id="+$.urlParam('acc_id');
+  window.location=link;
+}
+
+$.urlParam = function(name){
+    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (results==null){
+       return null;
+    }
+    else{
+       return results[1] || 0;
+    }
+}
+
+$(function() {
+        
+        $.ajax({
+            url: '/getNotes',
+            data: 'acc_id='+$.urlParam('acc_id'),
+            type: 'POST',
+            success: function(res) {
+ 
+                // Parse the JSON response
+                
+                var accountObj = JSON.parse(res);
+                 
+                // Append to the template
+                $('#listTemplate').tmpl(accountObj).appendTo('#ulist');
+ 
+ 
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+    
+    });
+
+
+    </script>
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="/userHome">Home</a></li>
+            <li role="presentation" class="active"><a href="/logout">Logout</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">CRM</h3>
+      </div>
+ 
+      <div class="jumbotron">
+        <h1>Customer Information</h1>
+        
+        <table class="table">
+        <form class="form-signin">
+        <tr>
+        <td>First name:</td><td><input type="text" readonly value={{fname}} size="30"></input></td></tr>
+        <tr>
+        <td>Last name:</td><td><input type="text" readonly value={{lname}} size="30"></input></td></tr>
+        <tr>
+        <td>Country Code: &nbsp;</td><td><input type="text" readonly value={{cc}} size="5"></input><br></td></tr>
+        <tr>
+        <td>Phone Number: &nbsp;</td><td><input type="text" readonly value={{phone}} size="30"></input></td></tr>
+        <tr>
+        <td>Alternate Country Code: &nbsp;</td><td><input type="text" readonly value="{{acc}}" size="5"></input></td></tr>
+        <tr>
+        <td>Alternate Phone Number: &nbsp;</td><td><input type="text" readonly value="{{aphone}}" size="30"></input></td></tr>
+        <tr>
+        <td>Email Address: &nbsp;</td><td><input type="text" readonly value={{email}} size="30"></input></td></tr>
+        <tr>
+        <td>Subscription: &nbsp;</td><td><textarea readonly size="30">{{subscription}}</textarea></td></tr>
+        <tr>
+        <td>Address: &nbsp;</td><td><textarea readonly >{{address}}</textarea><br></td></tr>
+        <tr>
+        <td>Source: &nbsp;</td><td><textarea readonly >{{source}}</textarea></td></tr>
+        <tr>
+        <td>Timezone: &nbsp;</td><td><input type="text" readonly value={{timezone}} size="5"></input><br></td></tr>
+        <tr>
+        <td>Notes: &nbsp;</td><td><textarea readonly>{{notes}}</textarea></td></tr>
+        <tr>
+        <td>Suspended: &nbsp;</td><td><input type="text" readonly value={{suspended}} size="5"></input></td></tr>
+        <tr>
+        <td>Reason: &nbsp;</td><td><textarea readonly >{{reason}}</textarea></td></tr>
+        <tr>
+        <td>User last updated: &nbsp;</td><td><input type="text" readonly value={{user}} size="30"></input></td></tr>
+        <tr>
+        <td>Credit Card: &nbsp;</td><td><textarea readonly >{{creditcard}}</textarea></td></tr>
+        </form>
+        <tr><td><button id="btnEdit" class="btn btn-default" onclick='window.location="/showAddNote?acc_id={{id}}"' type="button">Add a case note</button></td><td></td></tr>
+      
+        </table>
+
+        <div class="panel-body">
+            
+            <ul id="ulist" class="list-group">
+
+        <script id="listTemplate" type="text/x-jQuery-tmpl">
+ 
+    <li class="list-group-item">
+        <div class="checkbox">
+            <label>
+            <table class="table">
+            <tr>
+                <td>Notes:</td><td> ${notes}</td>
+            <tr>
+                <td>Created On:</td><td> ${createdon}</td>
+            <tr>
+                <td>Created By: </td><td>${createdby}</td>
+            <tr>
+                <td>status:</td><td> ${status}</td>
+                </table>
+            </label>
+        </div>
+        
+        <div class="pull-right action-buttons">
+            
+        </div>
+    </li><br>
+</script>
+
+</ul></div>
+      
+      </div>
+ 
+       <form id="notes">
+         <input type="hidden" name="id" value="{{id}}"></input>
+       </form>
+ 
+      <footer class="footer">
+        <p>&copy; Company 2015</p>
+      </footer>
+ 
+    </div>
+  </body>
+
+
+</html>
